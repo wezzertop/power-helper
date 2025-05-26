@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos base adicionales si son necesarios */
+body {
+  @apply font-sans bg-neutral-gray-lighter dark:bg-dark-bg text-neutral-gray dark:text-dark-text-primary;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Estilos para scrollbars (opcional, para consistencia visual) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-neutral-gray-lighter dark:bg-dark-surface;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-neutral-gray-light dark:bg-neutral-gray-dark rounded-md;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-neutral-gray dark:bg-dark-border;
+}
+
+/* Estilo para el resaltador de sintaxis si es necesario un fondo específico */
+pre[class*="language-"] {
+  @apply rounded-md; /* Asegura que el fondo del bloque de código también sea redondeado */
+}
