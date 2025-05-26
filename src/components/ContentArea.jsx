@@ -1,5 +1,5 @@
 // src/components/ContentArea.jsx
-import React from 'react'; // Eliminado useState, useEffect si no se usan directamente aquí para checklistStates
+import React from 'react';
 import PowerFxFunctions from './PowerFxFunctions';
 import GuiaDeVariables from './GuiaDeVariables';
 import SnippetsSection from './SnippetsSection';
@@ -16,17 +16,16 @@ const ContentArea = ({
   onResetFavorites,
   user,
   userSnippets,
-  setUserSnippets, // Para que SnippetsSection pueda actualizar la lista
+  setUserSnippets,
   loadingSnippets,
-  searchTerm, // Nueva prop para el término de búsqueda
-  // onResetChecklistStates (si se centraliza, vendría de App.jsx)
+  searchTerm,
+  powerFxSeparator,
+  setPowerFxSeparator // Esta es la prop que viene de App.jsx
 }) => {
 
-  // La lógica de checklistStates y resetAllChecklistStates se puede mover a App.jsx
-  // si se quiere un manejo más centralizado, o mantenerla aquí si SettingsSection
-  // es el único lugar donde se resetean. Por simplicidad, la dejo aquí por ahora,
-  // pero considera moverla a App.jsx para mayor consistencia si otros componentes la necesitan.
-  const [checklistStates, setChecklistStates] = React.useState(() => { // Usar React.useState
+  // La lógica de checklistStates y resetAllChecklistStates se mantiene aquí por ahora.
+  // Considera moverla a App.jsx si necesitas un control más centralizado.
+  const [checklistStates, setChecklistStates] = React.useState(() => {
     if (typeof window !== 'undefined') {
         const saved = {};
         try {
@@ -60,7 +59,6 @@ const ContentArea = ({
     }
   };
 
-
   const renderSection = () => {
     switch (activeSection) {
       case 'powerfx':
@@ -69,25 +67,27 @@ const ContentArea = ({
             favoriteFunctionIds={favoriteFunctionIds}
             onToggleFavorite={onToggleFavoriteFunction}
             listTitle="Funciones Fx"
-            searchTerm={searchTerm} // Pasar searchTerm
+            searchTerm={searchTerm}
+            powerFxSeparator={powerFxSeparator}
           />
         );
       case 'variables':
-        return <GuiaDeVariables />; // Búsqueda no implementada aquí aún
+        return <GuiaDeVariables powerFxSeparator={powerFxSeparator} />;
       case 'snippets':
-        return <SnippetsSection 
-                  user={user} 
-                  userSnippets={userSnippets} 
-                  setUserSnippets={setUserSnippets} 
+        return <SnippetsSection
+                  user={user}
+                  userSnippets={userSnippets}
+                  setUserSnippets={setUserSnippets}
                   loadingSnippets={loadingSnippets}
-                  searchTerm={searchTerm} // Pasar searchTerm
+                  searchTerm={searchTerm}
+                  powerFxSeparator={powerFxSeparator}
                />;
       case 'patterns':
-        return <PatronesSection />; // Búsqueda no implementada aquí aún
+        return <PatronesSection powerFxSeparator={powerFxSeparator} />;
       case 'themes':
-        return <ThemeGenerator />;
+        return <ThemeGenerator powerFxSeparator={powerFxSeparator} />;
       case 'checklists':
-        return <ChecklistsSection />; // Búsqueda no implementada aquí aún
+        return <ChecklistsSection />;
       case 'favorites':
         return (
           <PowerFxFunctions
@@ -96,13 +96,16 @@ const ContentArea = ({
             functionsList={favoriteFunctionsList}
             listTitle="Mis Funciones Favoritas"
             initialSelectedId={favoriteFunctionsList[0]?.id || null}
-            searchTerm={searchTerm} // Pasar searchTerm
+            searchTerm={searchTerm}
+            powerFxSeparator={powerFxSeparator}
           />
         );
       case 'settings':
         return <SettingsSection
                   onResetFavorites={onResetFavorites}
                   onResetChecklistStates={resetAllChecklistStates}
+                  powerFxSeparator={powerFxSeparator}
+                  setPowerFxSeparator={setPowerFxSeparator} // Asegúrate de pasar la función correcta aquí
                />;
       default:
         return (
@@ -110,7 +113,8 @@ const ContentArea = ({
             favoriteFunctionIds={favoriteFunctionIds}
             onToggleFavorite={onToggleFavoriteFunction}
             listTitle="Funciones Fx"
-            searchTerm={searchTerm} // Pasar searchTerm
+            searchTerm={searchTerm}
+            powerFxSeparator={powerFxSeparator}
           />
         );
     }

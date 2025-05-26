@@ -20,9 +20,23 @@ function App() {
 
   const [userSnippets, setUserSnippets] = useState([]);
   const [loadingSnippets, setLoadingSnippets] = useState(false);
-
-  // Nuevo estado para el término de búsqueda global
   const [globalSearchTerm, setGlobalSearchTerm] = useState('');
+
+  // Estado para el separador de argumentos de Power Fx
+  const [powerFxSeparator, setPowerFxSeparator] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedSeparator = localStorage.getItem('powerFxSeparator');
+      return savedSeparator || ','; // Default to comma
+    }
+    return ',';
+  });
+
+  // Guardar el separador en localStorage cuando cambie
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('powerFxSeparator', powerFxSeparator);
+    }
+  }, [powerFxSeparator]);
 
   useEffect(() => {
     const getSession = async () => {
@@ -169,7 +183,7 @@ function App() {
           onToggleSidebar={window.innerWidth < 1024 ? toggleSidebarOverlay : toggleSidebarCollapse}
           isSidebarCollapsed={isSidebarCollapsed}
           user={user}
-          onSearchChange={setGlobalSearchTerm} // Pasar la función para actualizar el término de búsqueda
+          onSearchChange={setGlobalSearchTerm}
         />
         <ContentArea
           activeSection={activeSection}
@@ -179,9 +193,11 @@ function App() {
           onResetFavorites={resetFavoriteFunctionsState}
           user={user}
           userSnippets={userSnippets}
-          setUserSnippets={setUserSnippets}
+          setUserSnippets={setUserSnippets} // Esta prop es para SnippetsSection
           loadingSnippets={loadingSnippets}
-          searchTerm={globalSearchTerm} // Pasar el término de búsqueda a ContentArea
+          searchTerm={globalSearchTerm}
+          powerFxSeparator={powerFxSeparator}
+          setPowerFxSeparator={setPowerFxSeparator} // Asegúrate que esta es la función setter del estado
         />
       </div>
     </div>
